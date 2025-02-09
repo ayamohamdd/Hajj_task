@@ -67,11 +67,5 @@ dependencies:
   cupertino_icons: ^1.0.6 # Icons support
 ```
 
-## Contribution
 
-Feel free to fork this repository and submit pull requests for improvements.
-
-## License
-
-This project is licensed under the MIT License.
 
