@@ -16,4 +16,6 @@ class AppConstants {
     AppAssets.group10,
     AppAssets.group11,
   ];
+  static const int totalItems = 12;
+  static const String appFont = 'Poppins';
 }
