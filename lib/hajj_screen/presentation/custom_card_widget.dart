@@ -5,8 +5,7 @@ import 'package:mvp_task/core/utils/app_dimenstions.dart';
 import 'package:mvp_task/core/widgets/icon_button_widget.dart';
 
 class CustomCardWidget extends StatelessWidget {
-  const CustomCardWidget({super.key});
-
+  const CustomCardWidget({super.key,});
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -33,9 +33,10 @@ dependencies:
   circle_wheel: ^0.0.1+2
   circular_motion: ^0.0.6
   cupertino_icons: ^1.0.8
+  device_preview: ^1.2.0
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.1.3  
+  flutter_bloc: ^9.0.0
   flutter_fortune_wheel: ^1.3.2
   wheel_chooser: ^1.1.2
 

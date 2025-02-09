@@ -10,99 +10,107 @@ import 'package:mvp_task/core/utils/app_dimenstions.dart';
 import 'package:mvp_task/hajj_screen/controller/cubit/hajj_cubit.dart';
 
 class HajjWheelWidget extends StatelessWidget {
-  HajjWheelWidget(
-      {super.key,
-      required this.selectedController,
-      required this.selectedIndex});
+  const HajjWheelWidget({super.key, required this.selectedController});
+
   final StreamController<int> selectedController;
-  int selectedIndex;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HajjCubit, HajjState>(
       builder: (context, state) {
+        int highlightedIndex = context.watch<HajjCubit>().currentIndex;
+
         return Stack(
           alignment: Alignment.center,
           children: [
-            Transform.rotate(
-              angle: pi,
-              child: SizedBox(
-                width: AppDimension.screenWidth,
-                height: AppDimension.screenHeight * 0.6,
-                child: FortuneWheel(
-                  animateFirst: false,
-                  duration: Duration.zero,
-                  physics: NoPanPhysics(),
-                  selected: selectedController.stream,
-                  indicators: [],
-                  items: List.generate(AppConstants.totalItems, (index) {
-                    print(context.read<HajjCubit>().currentIndex);
-                    double angle = ((pi / 2) - index * (pi / 6));
-                    return FortuneItem(
-                      style: const FortuneItemStyle(
-                        color: Colors.transparent,
-                        borderWidth: 0,
-                        borderColor: Colors.white,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Transform.translate(
-                          offset:
-                              index == context.read<HajjCubit>().currentIndex
-                                  ? Offset(22, 0)
-                                  : index == 2
-                                      ? Offset(18, -7)
-                                      : index == 4
-                                          ? Offset(18, 7)
-                                          : index == 5
-                                              ? Offset(18, -5)
-                                              : index == 7
-                                                  ? Offset(18, 9)
-                                                  : index == 8
-                                                      ? Offset(18, -5)
-                                                      : index == 10
-                                                          ? Offset(18, 8)
-                                                          : index == 11
-                                                              ? Offset(18, -5)
-                                                              : Offset(18, 2),
-                          child: Transform.rotate(
-                            angle: angle,
-                            child: Image.asset(
-                              AppConstants.wheelImages[index],
-                              fit: BoxFit.contain,
-                              width: AppDimension.screenWidth * 0.5,
-                              height: AppDimension.screenHeight * 0.4,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-            ),
-            Positioned(
-              child: Image.asset(AppAssets.group12, width: 170, height: 170),
-            ),
+            _buildWheel(highlightedIndex),
+            _buildCenterImage(),
           ],
         );
       },
     );
   }
 
-  Offset getOffsetForIndex(int index) {
-    double x = 11;
-    double y = 2;
+  Widget _buildWheel(int highlightedIndex) {
+    return Transform.rotate(
+      angle: pi,
+      child: SizedBox(
+        width: AppDimension.screenWidth,
+        height: AppDimension.screenHeight * 0.6,
+        child: FortuneWheel(
+          animateFirst: false,
+          duration: Duration.zero,
+          physics: NoPanPhysics(),
+          selected: selectedController.stream,
+          indicators: [],
+          items: List.generate(
+            AppConstants.totalItems,
+            (index) => _buildFortuneItem(index, highlightedIndex),
+          ),
+        ),
+      ),
+    );
+  }
 
-    if (index % 3 == 0) {
-      y = -5;
-    } else if (index % 4 == 0) {
-      y = 7;
-    } else if (index % 5 == 0) {
-      y = 9;
-    } else if (index % 2 == 0) {
-      y = -7;
-    }
+  FortuneItem _buildFortuneItem(int index, int highlightedIndex) {
+    double angle = ((pi / 2) - index * (pi / 6));
 
-    return Offset(x, y);
+    return FortuneItem(
+      style: const FortuneItemStyle(
+        color: Colors.transparent,
+        borderWidth: 0,
+        borderColor: Colors.white,
+      ),
+      child: Transform.translate(
+        offset: highlightedIndex == index ? const Offset(7, 0) : Offset.zero,
+        child: Padding(
+          padding: EdgeInsets.all(AppDimension.screenWidth * 0.055),
+          child: Transform.translate(
+            offset: _calculateOffset(index),
+            child: Transform.rotate(
+              angle: angle,
+              child: Opacity(
+                opacity: _isHighlighted(index, highlightedIndex) ? 1 : 0.3,
+                child: Image.asset(
+                  AppConstants.wheelImages[index],
+                  fit: BoxFit.contain,
+                  width: AppDimension.screenWidth * 0.5,
+                  height: AppDimension.screenHeight * 0.5,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds the center image overlay.
+  Widget _buildCenterImage() {
+    return Positioned(
+      child: Image.asset(AppAssets.group12, width: 170, height: 170),
+    );
+  }
+
+  /// Calculates the offset for each index.
+  Offset _calculateOffset(int index) {
+    final Map<int, Offset> offsetMap = {
+      0: const Offset(15, 0),
+      2: const Offset(15, -7),
+      4: const Offset(15, 7),
+      5: const Offset(15, -5),
+      7: const Offset(15, 9),
+      8: const Offset(15, -5),
+      10: const Offset(15, 8),
+      11: const Offset(15, -5),
+    };
+    return offsetMap[index] ?? const Offset(18, 2);
+  }
+
+  bool _isHighlighted(int index, int highlightedIndex) {
+    return List.generate(
+      4,
+      (i) => (highlightedIndex + i) % AppConstants.totalItems,
+    ).contains(index);
   }
 }

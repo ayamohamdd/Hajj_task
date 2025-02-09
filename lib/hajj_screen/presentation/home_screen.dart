@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mvp_task/core/constants/app_colors.dart';
-import 'package:mvp_task/core/constants/app_constants.dart';
-import 'package:mvp_task/hajj_screen/presentation/custom_card_widget.dart';
 import 'package:mvp_task/hajj_screen/presentation/hajj_screen_body.dart';
 import '../../core/constants/app_strings.dart';
 
@@ -25,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
       ),
-      body: const HajjScreenBody(),
+      body: HajjScreenBody(),
     );
   }
 }
